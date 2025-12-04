@@ -1,5 +1,4 @@
-# subtracePPM
-
+# EC-Pred
 
 
 ## Getting started
