@@ -1,92 +1,101 @@
-# EC-Pred
+# Event Clustering for Efficient and Context-Aware Event Sequence Prediction
 
+This is the implementation accompanying the paper 'Event Clustering for Efficient and Context-Aware Event Sequence Prediction' by Simon Rauch, Gabriel Tavares, Daniel Schuster and Thomas Seidl submitted to the CAiSE Conference 2026
 
-## Getting started
+## Framework
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+We provide a prediction framework EC-Pred to efficiently forecast full future event information of running business processes. The framework itself builds single event clustering of business process data which is then fed into a sequential-pattern-based forecasting algorithm presented in previous work [[1]] (#1). Our framework is capable of predicting next activities, complete remaining activity traces as well as any accompanying event attribute considered in the event clustering phase.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+![EC-Pred framework](img/ec-pred.png)
 
-## Add your files
+## Setup
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+We implemented our approach as a combination of two python modules (`contextppm` and `best4ppm`) and provided an overall forecasting script to reproduce our experimental results.
+To setup the environment for running our code, we provide a `pyproject.toml` file (requires python>3.12) from which the needed dependencies can be gathered with `pip` via (execute from the project directory):
 
-```
-cd existing_repo
-git remote add origin https://gitlab2.cip.ifi.lmu.de/rauchs/subtraceppm.git
-git branch -M main
-git push -uf origin main
-```
+`python -m pip install .`
 
-## Integrate with your tools
+or with [`poetry`](https://python-poetry.org/) via (execute from the project directory):
 
-- [ ] [Set up project integrations](https://gitlab2.cip.ifi.lmu.de/rauchs/subtraceppm/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+`poetry install`
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+The codebase consists of our module `contextppm` and the previously published module `best4ppm` ([link](https://github.com/lmu-dbs/BEST) to the repository) and different scripts for dataset manipulation (`BPI2012_conversions.py`), event log metric extraction (`log_characteristics.py`) and the experiments for the prediction of next activities, activity suffixes and accompanying event attributes (`event_clustering.py`).
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+We also provide a set of config files, which are populated with the needed setup to reproduce our experimental results (`general_config.yaml`, `model_configs.yaml`, `data_configs.yaml`).
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### Config
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+The general config sets the parameters for the main prediction loop. You can specify the datasets you want to analyze (`dataset` either as list of multiple or string of a single dataset), the evaluation strategy (i.e., cross-validation with `cv_folds` > 1 or single split with `cv_folds`==1 alongside the desired 'train_pct' specifying the share of cases you want to use for training) and the model configuration (`model_config`). For multiprocessing you can set the number of cores you want to use for the evaluation (`ncores`).
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+The general config file is linked to the remaining config files. With `dataset` you access the different data configurations matched by the dataset name. The data config file specifies the dataset filename (`file_name`), the relevant column identifiers (`case_identifier`, `activity_identifier`, `timestamp_identifier`) as well as the information incorporated into the event clustering by specification of the respective preprocessing and scaling options (`transform_params` and `encoding_params`). The entries inside `encoding_params` need to be distinct across the given options of `OneHotEncoder`, `StandardScaler`, `MinMaxScaler` and `RobustScaler`.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+The model config file holds the model-specific parameters for model training. Our model has different parameters: 
 
-## License
-For open source projects, say how it is licensed.
+- `max_pattern_size_train`/`max_pattern_size_eval`: specifying the depth of the tree (train) and the maximum traversal depth in the evaluation loop (eval). The depth is specified via the maximum allowed subtrace pattern size where the (pattern size - 1)/2 is the depth of the tree.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- 'process_stage_width_percentage': The main parameter for the number of process stages. The number of process stages is statically determined by calculating the process stage width via the percentage of the maximum trace length we see in the training data. A value of zero results in `n` process stages of width 1 with `n` being the maximum trace length we see in the training data, i.e., n BEST models. A value of 1 results in a single process stage, i.e., one trained BEST model.
+
+- `task`: the tasks you want to perform. `nep` performs Next Event Prediction and `sfx` performs Suffix Prediction (can also be passed as a list of both tasks)
+
+- `min_freq`: cutoff frequency for subtrace patterns. A value close to zero prevents filtering of subtrace patterns. We set this to 10e-15 in our experiments.
+
+- `break_buffer`: the predicted sequence length at which the prediction loop is terminated in terms of `break_buffer` times the maximum trace length we see in the training dataset. We set this to 1.2 in our experiments.
+
+- `prune_func`: A prune function for tree pruning. This is not applied/implemented currently
+
+- `filter_sequences`: this filters the padded dummy activity tokens from the predicted sequences for evaluation. Should be set to `True` for a sound evaluation of predictive performance.
+
+### Full Event Prediction with EC-Pred
+
+We provide a script for complete recreation of the experiments presented in the paper. The script performs the model training for the given parameters in the config files and subsequently performs Next Event Prediction and Suffix Prediction for the test instances including the evaluation by accuracy, similarity and error metrics (for attribute prediction -- we forecast next timestamps and remaining times until case completion). We recommend to alter the model configuration in the `model_configs.yaml` or to use model configuration `test_config` for testing of the pipeline as the full experimental evaluation performs training and predictions for an exhaustive set of parameter combinations.
+
+After a correct setup of the environment, execution of `event_clustering.py` executes the complete training, prediction and evaluation pipeline:
+
+`python src/event_clustering.py`
+
+In the current configuration the following pipeline is performed:
+
+- Generation of 5 folds of training and test data for the 5-fold cross validation experimental setting
+- For the different parameter combinations of `clustering_type` and `n_clusters` in the model configuration, a model training loop is performed based on the resulting clustering and for each fold with `max_pattern_size_train` of 21 resulting in a tree with patterns of length 21, i.e., 10 preceding activities, the center activity and 10 suceeding activities
+- Predictions are generated for each parameter value given for `max_pattern_size_eval` and for each fold
+- The total number of prediction/evaluation runs is specified by `|max_pattern_size_eval|*|n_clusters|*|clustering_type|*|cv_folds|`
+- The average accuracy/similarity/error can be calculated by averaging the achieved performance metrics across all folds for one combination of `max_pattern_size_eval` and `process_stage_width_percentage`
+
+## Included Event Log Datasets
+
+- We provide the analyzed datasets in the `data/` folder:
+	- `Helpdesk.csv` [[D1]](#D1)
+	- `BPI2012.csv` [[D2]](#D2) 
+	- `BPI2013_closed.csv` [[D3]](#D3)
+	- `BPI2013_incidents.csv` [[D4]](#D4)
+	- `env_permit.csv` [[D5]](#D5)
+	- `sepsis.csv` [[D6]](#D6)
+	- `nasa.csv` [[D7]](#D7)
+- We added a script for data manipulation of the BPI Challenge 2012 event log. The event logs created for analysis are:
+	- `BPI2012_Full.csv`: BPI Challenge 2012 with an augmented activity identifier consisting of the raw activity names and the lifecycle information (SCHEDULE, START, COMPLETE)
+	- `BPI2012_W.csv`: A subset of the `BPI2012_Full.csv` where we only consider the workflow information, i.e., activities with the `W_` prefix
+	- `BPI2012_C.csv`: A subset of the `BPI2012.csv` where we only consider the activities with `COMPLETE` lifecycle information
+	- `BPI2012_WC.csv`: A subset of the `BPI2012_C.csv` where we only consider the workflow information, i.e., activities with the `W_` prefix
+	- We provide analyses on the logs `BPI2012_W.csv`, `BPI2012_C.csv` and `BPI2012_WC.csv`
+
+## References
+
+<a id="1">[1]</a> Rauch, Simon, Frey, Christian M. M., Maldonado, Andrea, & Seidl, Thomas. (2025). BEST: Bilaterally Expanding Subtrace Tree for Event Sequence Prediction. In Lecture Notes in Computer Science (pp. 415–432). Springer Nature Switzerland. https://doi.org/10.1007/978-3-032-02867-9_25 
+
+## Dataset References
+
+<a id="D1">[D1]</a> Polato, Mirko (2017). Dataset belonging to the help desk log of an Italian Company (Link: <https://data.4tu.nl/articles/_/12675977/1>)
+
+<a id="D2">[D2]</a> van Dongen,  Boudewijn (2012). BPI Challenge 2012 (Link: <https://data.4tu.nl/articles/_/12689204/1>)
+
+<a id="D3">[D3]</a> Steeman, Ward (2013). BPI Challenge 2013, closed problems (Link: <https://data.4tu.nl/articles/_/12714476/1>)
+
+<a id="D4">[D4]</a> Steeman, Ward (2013). BPI Challenge 2013, incidents  (Link: <https://data.4tu.nl/articles/_/12693914/1>)
+
+<a id="D5">[D5]</a> Buijs, Joos (2022). Receipt phase of an environmental permit application process (WABO),  CoSeLoG project (Link: <https://data.4tu.nl/articles/_/12709127/2>)
+
+<a id="D6">[D6]</a> Mannhardt,  Felix (2016). Sepsis Cases - Event Log (Link: <https://data.4tu.nl/articles/_/12707639/1>)
+
+<a id="D7">[D7]</a> Leemans,  Maikel (2017). NASA Crew Exploration Vehicle (CEV) Software Event Log (Link: <https://data.4tu.nl/articles/_/12696995/1>)
