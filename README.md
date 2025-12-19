@@ -1,6 +1,6 @@
 # Event Clustering for Efficient and Context-Aware Event Sequence Prediction
 
-This is the implementation accompanying the paper 'Event Clustering for Efficient and Context-Aware Event Sequence Prediction' by Simon Rauch, Gabriel Tavares, Daniel Schuster and Thomas Seidl submitted to the CAiSE Conference 2026
+This is the implementation accompanying the paper 'Event Clustering for Efficient and Context-Aware Event Sequence Prediction' by Simon Rauch, Daniel Schuster, Gabriel Tavares and Thomas Seidl submitted to the CAiSE Conference 2026
 
 ## Framework
 
