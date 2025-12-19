@@ -11,7 +11,7 @@ We provide a prediction framework EC-Pred to efficiently forecast full future ev
 ## Setup
 
 We implemented our approach as a combination of two python modules (`contextppm` and `best4ppm`) and provided an overall forecasting script to reproduce our experimental results.
-To setup the environment for running our code, we provide a `pyproject.toml` file (requires python>3.12) from which the needed dependencies can be gathered with `pip` via (execute from the project directory):
+To setup the environment for running our code, we provide a `pyproject.toml` file (requires python>=3.11) from which the needed dependencies can be gathered with `pip` via (execute from the project directory):
 
 `python -m pip install .`
 
