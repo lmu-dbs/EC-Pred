@@ -4,7 +4,7 @@ This is the implementation accompanying the paper 'Event Clustering for Efficien
 
 ## Framework
 
-We provide a prediction framework EC-Pred to efficiently forecast full future event information of running business processes. The framework itself builds single event clustering of business process data which is then fed into a sequential-pattern-based forecasting algorithm presented in previous work [[1]] (#1). Our framework is capable of predicting next activities, complete remaining activity traces as well as any accompanying event attribute considered in the event clustering phase.
+We provide a prediction framework EC-Pred to efficiently forecast full future event information of running business processes. The framework itself builds single event clustering of business process data which is then fed into a sequential-pattern-based forecasting algorithm presented in previous work [[R1]](#R1). Our framework is capable of predicting next activities, complete remaining activity traces as well as any accompanying event attribute considered in the event clustering phase.
 
 ![EC-Pred framework](img/ec-pred.png)
 
@@ -82,7 +82,7 @@ In the current configuration the following pipeline is performed:
 
 ## References
 
-<a id="1">[1]</a> Rauch, Simon, Frey, Christian M. M., Maldonado, Andrea, & Seidl, Thomas. (2025). BEST: Bilaterally Expanding Subtrace Tree for Event Sequence Prediction. In Lecture Notes in Computer Science (pp. 415–432). Springer Nature Switzerland. https://doi.org/10.1007/978-3-032-02867-9_25 
+<a id="R1">[R1]</a> Rauch, Simon, Frey, Christian M. M., Maldonado, Andrea, & Seidl, Thomas. (2025). BEST: Bilaterally Expanding Subtrace Tree for Event Sequence Prediction. In Lecture Notes in Computer Science (pp. 415–432). Springer Nature Switzerland. https://doi.org/10.1007/978-3-032-02867-9_25 
 
 ## Dataset References
 
